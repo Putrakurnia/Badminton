@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MPI PJOK – Bola Basket</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#fff3e0;--card:#fff;--tx:#2b2140;--mut:#6b5f80;--or:#ff8a1f;--or2:#d9650a;--bl:#2f7bff;--bl2:#1b54c4;--gr:#2ec27e;--gr2:#1c8f5a;--rd:#ff4d6d;--sh:rgba(60,30,0,.22);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1730;--card:#2a2245;--tx:#f5eeff;--mut:#bdb0d8;--sh:rgba(0,0,0,.5);color-scheme:dark}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Baloo 2","Trebuchet MS",Verdana,sans-serif;background:var(--bg);color:var(--tx);background-image:radial-gradient(circle at 10% 0,rgba(255,138,31,.25),transparent 40%),radial-gradient(circle at 100% 30%,rgba(47,123,255,.2),transparent 40%);min-height:100vh}
+header{background:linear-gradient(180deg,#ff9d3c,#ff7a00);color:#fff;padding:14px 16px;text-align:center;box-shadow:0 6px 0 #c85f00,0 12px 20px var(--sh);border-radius:0 0 28px 28px}
+header h1{margin:0;font-size:clamp(1.3rem,4vw,2rem);text-shadow:0 3px 0 rgba(0,0,0,.25)}
+header small{opacity:.95}
+nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:16px 10px 4px;position:sticky;top:0;z-index:5}
+.btn,nav button{font:inherit;font-weight:700;border:0;cursor:pointer;color:#fff;background:linear-gradient(180deg,#4b94ff,var(--bl));padding:9px 16px;border-radius:999px;box-shadow:0 5px 0 var(--bl2),0 9px 12px var(--sh);transition:.1s}
+.btn:active,nav button:active{transform:translateY(4px);box-shadow:0 1px 0 var(--bl2)}
+nav button.on{background:linear-gradient(180deg,#ffb15a,var(--or));box-shadow:0 5px 0 var(--or2),0 9px 12px var(--sh)}
+.btn.g{background:linear-gradient(180deg,#4fe0a0,var(--gr));box-shadow:0 5px 0 var(--gr2),0 9px 12px var(--sh)}
+.btn.o{background:linear-gradient(180deg,#ffb15a,var(--or));box-shadow:0 5px 0 var(--or2),0 9px 12px var(--sh)}
+.btn.r{background:linear-gradient(180deg,#ff7a93,var(--rd));box-shadow:0 5px 0 #c42a48}
+main{max-width:920px;margin:0 auto;padding:14px}
+.page{display:none;animation:pop .35s}.page.on{display:block}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.card{background:var(--card);border-radius:26px;padding:18px;margin:14px 0;box-shadow:0 8px 0 rgba(0,0,0,.08),0 14px 26px var(--sh);border:3px solid rgba(255,255,255,.5)}
+h2{margin:.2em 0 .5em;color:var(--or2)}h3{margin:.2em 0;color:var(--bl)}
+.hero{text-align:center}
+.ball{width:150px;height:150px;margin:6px auto;animation:bounce 1.2s infinite ease-in}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-24px) rotate(15deg)}}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.tile{border-radius:22px;padding:14px;color:#fff;text-align:center;font-weight:700;cursor:pointer;border:0;font:inherit;box-shadow:0 7px 0 rgba(0,0,0,.25),0 14px 20px var(--sh)}
+.tile .e{font-size:2.6rem;display:block;filter:drop-shadow(0 4px 3px rgba(0,0,0,.3))}
+.t1{background:linear-gradient(160deg,#ffb15a,#ff7a00)}.t2{background:linear-gradient(160deg,#6aa8ff,#2f7bff)}.t3{background:linear-gradient(160deg,#5be6a8,#1fa86b)}.t4{background:linear-gradient(160deg,#ff8aa0,#e8365a)}.t5{background:linear-gradient(160deg,#b98aff,#7a45e0)}
+.sub{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.timeline{border-left:5px solid var(--or);margin-left:8px;padding-left:14px}.timeline p{margin:.5em 0}
+.tek{display:flex;gap:12px;align-items:flex-start}.tek .e{font-size:3rem;min-width:84px;height:84px;display:flex;align-items:center;justify-content:center;border-radius:24px;background:radial-gradient(circle at 30% 25%,#ffd29a,#ff8a1f);box-shadow:0 6px 0 var(--or2),0 10px 14px var(--sh)}
+.court{width:100%;max-width:520px;display:block;margin:auto}
+table{border-collapse:collapse;width:100%}td,th{padding:8px;border-bottom:2px dashed rgba(128,128,128,.3);text-align:left}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border-radius:16px;border:3px solid #e1d6f5;background:var(--card);color:var(--tx);font:inherit;cursor:pointer}
+.opt.sel{border-color:var(--bl);background:rgba(47,123,255,.15)}.opt.ok{border-color:var(--gr);background:rgba(46,194,126,.25)}.opt.no{border-color:var(--rd);background:rgba(255,77,109,.2)}
+.score{font-size:2.4rem;font-weight:800;text-align:center;color:var(--gr2)}
+.bar{height:16px;border-radius:99px;background:rgba(128,128,128,.25);overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--or),var(--gr));width:0;transition:.4s}
+.drag{display:inline-block;margin:4px;padding:8px 14px;border-radius:14px;background:linear-gradient(180deg,#ffb15a,var(--or));color:#fff;font-weight:700;cursor:grab;box-shadow:0 4px 0 var(--or2);user-select:none}
+.drag.pick{outline:4px solid var(--bl)}
+.zone{min-height:54px;margin:8px 0;padding:8px;border:3px dashed var(--bl);border-radius:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.zone b{flex:1 1 220px}.zone.ok{border-color:var(--gr);background:rgba(46,194,126,.15)}.zone.no{border-color:var(--rd);background:rgba(255,77,109,.12)}
+#ws{display:grid;gap:3px;max-width:480px;margin:10px auto;touch-action:none;user-select:none}
+#ws div{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--card);border-radius:8px;font-weight:800;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.18);font-size:clamp(.7rem,3vw,1.1rem)}
+#ws div.st{background:var(--bl);color:#fff}#ws div.fd{background:var(--gr);color:#fff}
+.words span{display:inline-block;margin:3px;padding:4px 10px;border-radius:99px;background:rgba(128,128,128,.2);font-weight:700}.words span.fd{background:var(--gr);color:#fff;text-decoration:line-through}
+.ord{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap}.ord.v{flex-direction:column}
+.step{padding:9px 14px;border-radius:14px;background:linear-gradient(180deg,#6aa8ff,var(--bl));color:#fff;font-weight:700;cursor:pointer;box-shadow:0 4px 0 var(--bl2);border:0;font:inherit;text-align:left}
+.step.p{background:linear-gradient(180deg,#5be6a8,var(--gr));box-shadow:0 4px 0 var(--gr2)}.step.bad{background:var(--rd)}
+.ans{min-height:50px;border:3px dashed var(--gr);border-radius:16px;padding:8px}
+a{color:var(--bl)}a.btn{text-decoration:none;display:inline-block;margin:3px}
+.dev{text-align:center}.av{font-size:4rem}
+</style></head><body>
+<header><h1>🏀 MPI PJOK • Bola Basket</h1><small>Kelas 10 SMA • Media Pembelajaran Interaktif</small></header>
+<nav id="nav"></nav>
+<main>
+<!-- BERANDA -->
+<section class="page on" id="p-home">
+<div class="card hero"><svg class="ball" viewBox="0 0 100 100"><defs><radialGradient id="bg" cx="35%" cy="30%"><stop offset="0" stop-color="#ffc27a"/><stop offset=".6" stop-color="#ff8a1f"/><stop offset="1" stop-color="#b94d00"/></radialGradient></defs><circle cx="50" cy="50" r="46" fill="url(#bg)"/><g fill="none" stroke="#3b1c00" stroke-width="2.5"><path d="M4 50h92M50 4v92"/><path d="M18 17c20 18 20 48 0 66M82 17c-20 18-20 48 0 66"/></g><ellipse cx="36" cy="28" rx="12" ry="7" fill="#fff" opacity=".35"/></svg>
+<h2>Halo, Atlet Muda! 👋</h2><p>Ayo belajar teknik dasar permainan bola basket dengan cara yang seru. Pilih menu di bawah untuk memulai petualanganmu!</p></div>
+<div class="grid" id="homegrid"></div>
+</section>
+<!-- PANDUAN -->
+<section class="page" id="p-panduan"><div class="card"><h2>📖 Panduan Penggunaan</h2>
+<ol><li>Klik <b>menu</b> di bagian atas untuk berpindah halaman.</li><li>Buka <b>Tujuan</b> agar tahu apa yang akan kamu capai.</li><li>Baca <b>Materi</b> dari sejarah sampai aturan permainan. Klik tombol sub-menu untuk berganti topik.</li><li>Kerjakan <b>Latihan</b> (10 soal pilihan ganda). Skor muncul di akhir.</li><li>Mainkan <b>Gim Edukasi</b>: seret-lepas, cari kata, dan urutkan langkah. Setiap gim punya skor.</li><li>Di layar sentuh, <b>ketuk</b> kata lalu ketuk kotak tujuan sebagai pengganti seret.</li><li>Boleh mengulang sebanyak yang kamu mau. Semangat! 💪</li></ol></div></section>
+<!-- TUJUAN -->
+<section class="page" id="p-tujuan"><div class="card"><h2>🎯 Tujuan Pembelajaran</h2><p style="font-size:1.2rem"><b>Memahami teknik-teknik dasar permainan bola basket</b> dalam pembelajaran PJOK.</p><p>Setelah belajar, kamu mampu:</p><ul><li>Menceritakan sejarah bola basket di Indonesia.</li><li>Menjelaskan pengertian bola basket.</li><li>Menyebutkan dan mengurutkan teknik dasar: passing, dribbling, shooting, lay-up, dan rebound.</li><li>Menjelaskan aturan dan waktu permainan.</li></ul></div></section>
+<!-- MATERI -->
+<section class="page" id="p-materi"><div class="sub" id="msub"></div><div id="mbody"></div></section>
+<!-- LATIHAN -->
+<section class="page" id="p-latihan"><div class="card"><h2>✏️ Latihan: 10 Soal Pilihan Ganda</h2><div class="bar"><i id="qbar"></i></div><div id="qbox"></div></div></section>
+<!-- GIM -->
+<section class="page" id="p-gim"><div class="sub"><button class="btn" data-g="g1">🧲 Seret & Lepas</button><button class="btn" data-g="g2">🔍 Cari Kata</button><button class="btn" data-g="g3">🔢 Urutkan Langkah</button></div>
+<div class="card gm" id="g1"><h2>🧲 Seret & Lepas</h2><p>Pasangkan istilah dengan penjelasannya. Seret (atau ketuk lalu ketuk kotak).</p><div id="dpool"></div><div id="dz"></div><button class="btn g" id="dchk">Periksa</button> <button class="btn o" id="drst">Ulangi</button><div class="score" id="dsc"></div></div>
+<div class="card gm" id="g2" hidden><h2>🔍 Cari Kata</h2><p>Ketuk huruf awal, lalu huruf akhir sebuah kata (mendatar, menurun, atau miring).</p><div class="words" id="wl"></div><div id="ws"></div><button class="btn o" id="wrst">Acak Ulang</button><div class="score" id="wsc"></div></div>
+<div class="card gm" id="g3" hidden><h2>🔢 Urutkan Langkah Kerja</h2><p>Ketuk langkah sesuai urutan yang benar. Skor total 100.</p>
+<h3>A. Vertikal – Langkah Chest Pass</h3><div class="ord v" id="pool1"></div><div class="ans ord v" id="ans1"></div>
+<h3>B. Horizontal – Langkah Lay-up</h3><div class="ord" id="pool2"></div><div class="ans ord" id="ans2"></div>
+<button class="btn g" id="ochk">Periksa</button> <button class="btn o" id="orst">Ulangi</button><div class="score" id="osc"></div></div>
+</section>
+<!-- PENGEMBANG -->
+<section class="page" id="p-dev"><div class="card dev"><div class="av">🧑‍🏫🏀</div><h2>Pengembang</h2><h3>Yoga Kurnia Putra, S.Pd</h3><p>Guru PJOK<br><b>SMAS MATER DEI PAMULANG</b></p><p>MPI ini dibuat dengan bahasa yang mudah dipahami murid kelas 10 SMA. Selamat belajar dan tetap sportif!</p></div></section>
+</main>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const pages=[["home","🏠","Beranda","t1"],["panduan","📖","Panduan","t2"],["tujuan","🎯","Tujuan","t3"],["materi","📚","Materi","t4"],["latihan","✏️","Latihan","t5"],["gim","🎮","Gim Edukasi","t1"],["dev","👤","Pengembang","t2"]];
+function go(id){$$(".page").forEach(p=>p.classList.toggle("on",p.id=="p-"+id));$$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.p==id));scrollTo({top:0,behavior:"smooth"})}
+pages.forEach(p=>{const b=document.createElement("button");b.dataset.p=p[0];b.textContent=p[1]+" "+p[2];b.onclick=()=>go(p[0]);$("#nav").append(b)});
+pages.slice(1).forEach(p=>{const t=document.createElement("button");t.className="tile "+p[3];t.innerHTML=`<span class="e">${p[1]}</span>${p[2]}`;t.onclick=()=>go(p[0]);$("#homegrid").append(t)});
+go("home");
+/* MATERI */
+const yt=q=>`<a class="btn o" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(q)}">▶ Tonton video</a>`;
+const M={
+"Sejarah":`<div class="card"><h2>📜 Sejarah Bola Basket di Indonesia</h2><div class="timeline">
+<p><b>1891</b> – Dr. James Naismith di Springfield, Amerika Serikat, menciptakan bola basket dengan keranjang buah persik.</p>
+<p><b>Masa 1930-an</b> – Bola basket dikenal di Indonesia (Hindia Belanda), dibawa orang Belanda dan dimainkan di sekolah serta perkumpulan olahraga.</p>
+<p><b>1951</b> – PERBASI (Persatuan Bola Basket Seluruh Indonesia) berdiri, 23 Oktober 1951. Bola basket juga mulai dipertandingkan di PON.</p>
+<p><b>1980-an</b> – Kompetisi nasional makin teratur melalui Kobatama, lalu berkembang menjadi liga profesional <b>IBL</b>.</p>
+<p><b>2000-an</b> – Liga pelajar <b>DBL</b> (Development Basketball League) membuat basket digemari remaja SMA.</p>
+<p><b>2018</b> – Indonesia menjadi tuan rumah Asian Games di Jakarta, termasuk cabang bola basket dan 3x3.</p>
+<p><b>2023</b> – Indonesia ikut menjadi tuan rumah FIBA World Cup di Jakarta.</p>
+<p><b>Kini</b> – Basket 3x3 dan liga putra-putri terus berkembang, banyak pemain muda tampil di tingkat Asia.</p></div></div>`,
+"Pengertian":`<div class="card"><h2>🏀 Pengertian Bola Basket</h2><p><b>Bola basket</b> adalah permainan bola besar yang dimainkan dua tim. Tiap tim terdiri atas <b>5 pemain</b> di lapangan. Tujuannya memasukkan bola ke keranjang (ring) lawan sebanyak mungkin dan mencegah lawan mencetak angka.</p>
+<svg class="court" viewBox="0 0 280 150"><rect x="2" y="2" width="276" height="146" rx="10" fill="#d99a52" stroke="#fff" stroke-width="3"/><line x1="140" y1="2" x2="140" y2="148" stroke="#fff" stroke-width="3"/><circle cx="140" cy="75" r="20" fill="none" stroke="#fff" stroke-width="3"/><rect x="2" y="48" width="55" height="54" fill="#c9462f" stroke="#fff" stroke-width="3"/><rect x="223" y="48" width="55" height="54" fill="#c9462f" stroke="#fff" stroke-width="3"/><path d="M2 20q110 55 0 110M278 20q-110 55 0 110" fill="none" stroke="#fff" stroke-width="3"/><circle cx="14" cy="75" r="5" fill="#ff8a1f"/><circle cx="266" cy="75" r="5" fill="#ff8a1f"/></svg>
+<p>Ukuran lapangan: <b>28 m × 15 m</b>. Tinggi ring: <b>3,05 m</b>.</p></div>`,
+"Teknik Dasar":`<div class="card"><h2>⛹️ Teknik Dasar Bola Basket</h2></div>
+${[["🤾","Passing (Mengoper)","Memindahkan bola ke teman. Jenisnya chest pass (setinggi dada), bounce pass (dipantulkan), dan overhead pass (dari atas kepala). Dorong bola dengan dua tangan dan ikuti gerak lengan sampai lurus.","basketball passing technique tutorial"],["🏀","Dribbling (Menggiring)","Memantulkan bola ke lantai dengan satu tangan secara berulang sambil bergerak. Gunakan ujung jari, bukan telapak tangan. Badan rendah, mata melihat ke depan.","basketball dribbling basic tutorial"],["🎯","Shooting (Menembak)","Melempar bola ke ring. Posisi BEEF: Balance (seimbang), Eyes (mata ke ring), Elbow (siku lurus), Follow-through (lecutan pergelangan).","basketball shooting form tutorial"],["🏃","Lay-up","Tembakan dekat ring setelah berlari dan melompat. Langkah: tangkap bola, langkah 1, langkah 2, lompat dengan lutut kanan terangkat, letakkan bola di papan.","basketball layup tutorial beginners"],["🙌","Rebound (Merebut Bola)","Menangkap bola pantulan dari ring atau papan. Berdiri menghalangi lawan (box out), lalu melompat dan tangkap dengan dua tangan.","basketball rebound technique"],["🛡️","Defense (Bertahan)","Sikap kaki selebar bahu, lutut ditekuk, tangan terbuka, bergeser menyamping dan menjaga lawan.","basketball defense stance tutorial"]].map(t=>`<div class="card tek"><div class="e">${t[0]}</div><div><h3>${t[1]}</h3><p>${t[2]}</p>${yt(t[3])}</div></div>`).join("")}`,
+"Aturan & Waktu":`<div class="card"><h2>📋 Aturan Permainan</h2><ul><li>Tiap tim: 5 pemain di lapangan, maksimal 12 pemain terdaftar.</li><li>Tidak boleh berlari sambil membawa bola tanpa menggiring (<b>traveling</b>).</li><li>Tidak boleh menggiring dengan dua tangan atau berhenti lalu menggiring lagi (<b>double dribble</b>).</li><li>Tidak boleh mendorong, memukul, atau menahan lawan (<b>foul</b>). Pemain dengan 5 pelanggaran harus keluar.</li><li>Tim harus menembak dalam <b>24 detik</b> (shot clock).</li><li>Tim harus membawa bola melewati garis tengah dalam <b>8 detik</b>.</li><li>Pemenang adalah tim dengan angka terbanyak.</li></ul>
+<h3>Nilai Angka</h3><table><tr><th>Jenis</th><th>Nilai</th></tr><tr><td>Lemparan bebas (free throw)</td><td>1 poin</td></tr><tr><td>Tembakan dalam garis 3 poin</td><td>2 poin</td></tr><tr><td>Tembakan luar garis 3 poin</td><td>3 poin</td></tr></table></div>
+<div class="card"><h2>⏱️ Waktu Permainan</h2><table><tr><th>Bagian</th><th>Lama</th></tr><tr><td>Satu pertandingan</td><td>4 kuarter</td></tr><tr><td>Tiap kuarter</td><td>10 menit</td></tr><tr><td>Istirahat antar kuarter</td><td>2 menit</td></tr><tr><td>Istirahat babak (setelah kuarter 2)</td><td>15 menit</td></tr><tr><td>Perpanjangan waktu jika seri</td><td>5 menit</td></tr></table><p>Catatan: pelajaran sekolah dapat memakai waktu lebih singkat sesuai kesepakatan guru.</p></div>`};
+Object.keys(M).forEach((k,i)=>{const b=document.createElement("button");b.className="btn"+(i?"":" o");b.textContent=k;b.onclick=()=>{$$("#msub button").forEach(x=>x.classList.remove("o"));b.classList.add("o");$("#mbody").innerHTML=M[k]};$("#msub").append(b)});
+$("#mbody").innerHTML=M["Sejarah"];
+/* LATIHAN */
+const Q=[["Siapa penemu permainan bola basket?",["James Naismith","Michael Jordan","Pierre de Coubertin","Ernest Thompson"],0],["Berapa jumlah pemain satu tim di lapangan?",["4","5","6","7"],1],["Organisasi induk bola basket Indonesia adalah…",["PSSI","PBSI","PERBASI","PRSI"],2],["Berapa tinggi ring basket?",["2,75 m","3,05 m","3,50 m","2,43 m"],1],["Memantulkan bola berulang kali saat bergerak disebut…",["Passing","Dribbling","Rebound","Block"],1],["Teknik menembak dekat ring setelah berlari adalah…",["Lay-up","Chest pass","Pivot","Jump ball"],0],["Satu kuarter pada pertandingan resmi berlangsung selama…",["8 menit","10 menit","12 menit","15 menit"],1],["Tembakan dari luar garis tiga poin bernilai…",["1 poin","2 poin","3 poin","4 poin"],2],["Berlari membawa bola tanpa menggiring disebut…",["Foul","Traveling","Rebound","Dunk"],1],["Batas waktu satu tim untuk menembak (shot clock) adalah…",["14 detik","24 detik","30 detik","8 detik"],1]];
+let qi=0,qs=0,qa=[];
+function showQ(){const b=$("#qbox");$("#qbar").style.width=qi*10+"%";
+if(qi>=Q.length){qs=qa.filter((a,i)=>a==Q[i][2]).length;const n=qs*10;b.innerHTML=`<div class="score">${n}/100</div><p style="text-align:center">Benar ${qs} dari 10. ${n>=80?"Hebat sekali! 🏆":n>=60?"Bagus, tingkatkan lagi! 👍":"Ayo baca materi lagi, kamu pasti bisa! 💪"}</p><div style="text-align:center"><button class="btn o" onclick="qi=0;qa=[];showQ()">Ulangi</button></div>`;return}
+const q=Q[qi];b.innerHTML=`<p><b>Soal ${qi+1}/10</b><br>${q[0]}</p>`+q[1].map((o,i)=>`<button class="opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<p id="fb"></p>`;
+$$(".opt").forEach(o=>o.onclick=()=>{if(o.dataset.done)return;const i=+o.dataset.i;qa[qi]=i;$$(".opt").forEach(x=>{x.dataset.done=1;if(+x.dataset.i==q[2])x.classList.add("ok")});if(i!=q[2])o.classList.add("no");$("#fb").innerHTML=(i==q[2]?"✅ Benar!":"❌ Belum tepat.")+`<br><button class="btn g" id="nx">${qi<9?"Lanjut":"Lihat Skor"}</button>`;$("#nx").onclick=()=>{qi++;showQ()}})}
+showQ();
+/* GIM tab */
+$$("[data-g]").forEach(b=>b.onclick=()=>{$$(".gm").forEach(g=>g.hidden=g.id!=b.dataset.g)});
+/* G1 DRAG */
+const D=[["Dribbling","Memantulkan bola sambil bergerak"],["Passing","Mengoper bola kepada teman"],["Shooting","Melempar bola ke arah ring"],["Rebound","Merebut bola pantulan dari ring"],["Lay-up","Tembakan dekat ring sambil melompat"],["Traveling","Berlari membawa bola tanpa menggiring"]];
+let pick=null;
+function dInit(){$("#dsc").textContent="";const p=$("#dpool");p.innerHTML="";const z=$("#dz");z.innerHTML="";
+[...D].sort(()=>Math.random()-.5).forEach(d=>{const e=document.createElement("span");e.className="drag";e.draggable=true;e.textContent=d[0];e.dataset.k=d[0];e.ondragstart=ev=>ev.dataTransfer.setData("t",d[0]);e.onclick=()=>{$$(".drag").forEach(x=>x.classList.remove("pick"));pick=e;e.classList.add("pick")};p.append(e)});
+D.forEach(d=>{const r=document.createElement("div");r.className="zone";r.dataset.k=d[0];r.innerHTML=`<b>${d[1]}</b>`;const put=e=>{if(!e)return;const old=r.querySelector(".drag");if(old)$("#dpool").append(old);r.append(e);e.classList.remove("pick");pick=null};r.ondragover=ev=>ev.preventDefault();r.ondrop=ev=>{ev.preventDefault();put($$(".drag").find(x=>x.dataset.k==ev.dataTransfer.getData("t")))};r.onclick=ev=>{if(pick&&ev.target==r||pick&&ev.target.tagName=="B")put(pick)};z.append(r)})}
+$("#dchk").onclick=()=>{let c=0;$$("#dz .zone").forEach(z=>{const d=z.querySelector(".drag"),ok=d&&d.dataset.k==z.dataset.k;if(ok)c++;z.classList.remove("ok","no");z.classList.add(ok?"ok":"no")});$("#dsc").textContent=`Skor: ${Math.round(c/D.length*100)}/100 (${c}/${D.length} benar)`};
+$("#drst").onclick=dInit;dInit();
+/* G2 WORD SEARCH */
+const W=["DRIBEL","PASS","SHOOT","RING","LAYUP","REBOUND","FOUL","BOLA"],N=11;let G,fd,s0;
+function wInit(){$("#wsc").textContent="";fd=[];s0=null;G=Array.from({length:N},()=>Array(N).fill(""));
+const dirs=[[0,1],[1,0],[1,1]];
+W.forEach(w=>{for(let t=0;t<300;t++){const d=dirs[Math.random()*3|0],r=Math.random()*N|0,c=Math.random()*N|0,er=r+d[0]*(w.length-1),ec=c+d[1]*(w.length-1);if(er>=N||ec>=N)continue;let ok=1;for(let i=0;i<w.length;i++){const x=G[r+d[0]*i][c+d[1]*i];if(x&&x!=w[i])ok=0}if(!ok)continue;for(let i=0;i<w.length;i++)G[r+d[0]*i][c+d[1]*i]=w[i];break}});
+const A="ABCDEFGHIJKLMNOPQRSTUVWXYZ";G=G.map(r=>r.map(x=>x||A[Math.random()*26|0]));
+const g=$("#ws");g.style.gridTemplateColumns=`repeat(${N},1fr)`;g.innerHTML="";
+G.forEach((row,r)=>row.forEach((ch,c)=>{const e=document.createElement("div");e.textContent=ch;e.dataset.r=r;e.dataset.c=c;e.onclick=()=>wClick(r,c,e);g.append(e)}));
+$("#wl").innerHTML=W.map(w=>`<span id="w-${w}">${w}</span>`).join("")}
+function cell(r,c){return $(`#ws div[data-r="${r}"][data-c="${c}"]`)}
+function wClick(r,c,e){if(!s0){s0=[r,c];e.classList.add("st");return}
+const [a,b]=s0;$$("#ws .st").forEach(x=>x.classList.remove("st"));s0=null;
+const dr=Math.sign(r-a),dc=Math.sign(c-b),L=Math.max(Math.abs(r-a),Math.abs(c-b))+1;
+if((r-a&&c-b&&Math.abs(r-a)!=Math.abs(c-b))||L<2)return;
+let s="",cs=[];for(let i=0;i<L;i++){const rr=a+dr*i,cc=b+dc*i;s+=G[rr][cc];cs.push([rr,cc])}
+const rv=[...s].reverse().join("");const w=W.find(x=>(x==s||x==rv)&&!fd.includes(x));
+if(w){fd.push(w);cs.forEach(p=>cell(...p).classList.add("fd"));$("#w-"+w).classList.add("fd");$("#wsc").textContent=`Skor: ${Math.round(fd.length/W.length*100)}/100 (${fd.length}/${W.length} kata)`+(fd.length==W.length?" 🎉 Semua ketemu!":"")}}
+$("#wrst").onclick=wInit;wInit();
+/* G3 ORDER */
+const O1=["Berdiri seimbang, pegang bola di depan dada","Kedua siku ditekuk dekat badan","Langkahkan satu kaki ke arah sasaran","Dorong bola dengan kedua tangan lurus ke depan","Lecutkan pergelangan tangan, ibu jari ke bawah"],
+O2=["Tangkap bola","Langkah pertama","Langkah kedua","Lompat tinggi","Letakkan bola di papan"];
+const st=[[],[]],pl=[O1,O2];
+function oRender(i){const pool=$("#pool"+(i+1)),ans=$("#ans"+(i+1));pool.innerHTML="";ans.innerHTML="";
+if(!st[i].order)st[i].order=[...pl[i]].sort(()=>Math.random()-.5);
+st[i].order.forEach(t=>{if(st[i].chosen.includes(t))return;const b=document.createElement("button");b.className="step";b.textContent=t;b.onclick=()=>{st[i].chosen.push(t);oRender(i)};pool.append(b)});
+st[i].chosen.forEach((t,k)=>{const b=document.createElement("button");b.className="step p";b.textContent=(k+1)+". "+t;b.dataset.t=t;b.onclick=()=>{st[i].chosen.splice(k,1);oRender(i)};ans.append(b)})}
+function oInit(){[0,1].forEach(i=>{st[i]={chosen:[],order:null};oRender(i)});$("#osc").textContent=""}
+$("#ochk").onclick=()=>{let tot=0;[0,1].forEach(i=>{let ok=0;st[i].chosen.forEach((t,k)=>{const good=pl[i][k]==t;if(good)ok++;$$("#ans"+(i+1)+" .step")[k].classList.toggle("bad",!good)});tot+=Math.round(ok/pl[i].length*50)});$("#osc").textContent=`Skor: ${tot}/100`+(tot==100?" 🏆 Sempurna!":" (ketuk langkah merah untuk memperbaiki)")};
+$("#orst").onclick=oInit;oInit();
+</script></body></html>
